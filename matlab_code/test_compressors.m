@@ -7,23 +7,25 @@
 %
 % Joe.
 
-audio_filename = 'guitar_clean.wav';
+% audio_filename = 'guitar_clean.wav';
+audio_filename = 'dist_marshall_di.wav';
 
 resolution = 2^12;  % = 4096
 
 % Frame compression controls
-frame_compression_enabled = 1;
+frame_compression_enabled = 0;
 frame_control_parameter = 1000;%1400;
 frame_window_size = 500;
 frame_output_gain = 15;
 
 % Waveform compression controls
 waveform_compression_enabled = 1;
-waveform_control_parameter_hi = 1200; %60;   % <-- Use these controls to make
-waveform_control_parameter_lo = 1200; %3000; %     the distortion asymmetrical
+waveform_control_parameter_hi = 2000; %60;   % <-- Use these controls to make
+waveform_control_parameter_lo = 2000; %3000; %     the distortion asymmetrical
 waveform_output_gain = 20;
-waveform_pre_low_pass_filter_length = 20;
-waveform_post_low_pass_filter_length = 4;
+waveform_pre_low_pass_filter_length = 4;
+waveform_post_low_pass_filter_length = 2;
+waveform_mix = 60;
 
 % -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
@@ -48,7 +50,7 @@ if waveform_compression_enabled
     processed_audio = waveform_compressor(processed_audio, resolution, waveform_control_parameter_hi, ...
                                        waveform_control_parameter_lo, ...
                                        waveform_output_gain, waveform_pre_low_pass_filter_length, ...
-                                       waveform_post_low_pass_filter_length);
+                                       waveform_post_low_pass_filter_length, waveform_mix);
 end
 
 % Denormalise input / output audios

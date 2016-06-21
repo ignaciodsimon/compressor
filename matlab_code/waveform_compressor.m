@@ -1,4 +1,4 @@
-function output_audio = waveform_compressor(input_audio, resolution, control_parameter_hi, control_parameter_lo, output_gain, pre_low_pass_filter_length, post_low_pass_filter_length)
+function output_audio = waveform_compressor(input_audio, resolution, control_parameter_hi, control_parameter_lo, output_gain, pre_low_pass_filter_length, post_low_pass_filter_length, waveform_mix)
 
     % Input low-pass filter
     filtered_input_audio = conv(input_audio, ones(pre_low_pass_filter_length, 1)/pre_low_pass_filter_length);
@@ -21,6 +21,7 @@ function output_audio = waveform_compressor(input_audio, resolution, control_par
 
     % Output low-pass filter
     output_audio = conv(output_audio, ones(post_low_pass_filter_length, 1)/post_low_pass_filter_length) * output_gain/100;
+    output_audio = output_audio(1 : length(input_audio));
 
     did_peak_times = 0;
     % Hard-limit imposed by the DAC
@@ -34,6 +35,8 @@ function output_audio = waveform_compressor(input_audio, resolution, control_par
             did_peak_times = did_peak_times + 1;
         end
     end
+    
+    output_audio = (output_audio * waveform_mix / 100) + (input_audio * (100 - waveform_mix) / 100);
 
     if did_peak_times
         disp(sprintf('[Warning] The output signal of the WAVEFORM compressor peaked for: %d [samples]', did_peak_times));
